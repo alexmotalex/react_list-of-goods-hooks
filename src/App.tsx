@@ -43,35 +43,50 @@ function getPreparedGoods(
 export const App = () => {
   const [sortBy, setSortBy] = useState(SortType.NONE);
   const [isReversed, setIsReversed] = useState(false);
-
   const goods = getPreparedGoods(goodsFromServer, sortBy, isReversed);
+
+  function handleReset() {
+    setSortBy(SortType.NONE);
+    setIsReversed(false);
+  }
+
+  function toggleReversed() {
+    setIsReversed(prev => !prev);
+  }
 
   return (
     <div className="section content">
       <div className="buttons">
-        {Object.values(SortType)
-          .filter(Boolean)
-          .map(type => (
-            <button
-              key={type}
-              type="button"
-              className={cn('button', {
-                'is-info': type === SortType.ALPHABET,
-                'is-success': type === SortType.LENGTH,
-                'is-light': sortBy !== type,
-              })}
-              onClick={() => setSortBy(type)}
-            >
-              {type}
-            </button>
-          ))}
+        <button
+          type="button"
+          className={cn('button', 'is-info', {
+            'is-light': sortBy !== SortType.ALPHABET,
+          })}
+          onClick={() => {
+            setSortBy(SortType.ALPHABET);
+          }}
+        >
+          {SortType.ALPHABET}
+        </button>
+
+        <button
+          type="button"
+          className={cn('button', 'is-success', {
+            'is-light': sortBy !== SortType.LENGTH,
+          })}
+          onClick={() => {
+            setSortBy(SortType.LENGTH);
+          }}
+        >
+          {SortType.LENGTH}
+        </button>
 
         <button
           type="button"
           className={cn('button', 'is-warning', {
             'is-light': !isReversed,
           })}
-          onClick={() => setIsReversed(prev => !prev)}
+          onClick={toggleReversed}
         >
           Reverse
         </button>
@@ -80,10 +95,7 @@ export const App = () => {
           <button
             type="button"
             className="button is-danger is-light"
-            onClick={() => {
-              setSortBy(SortType.NONE);
-              setIsReversed(false);
-            }}
+            onClick={handleReset}
           >
             Reset
           </button>
